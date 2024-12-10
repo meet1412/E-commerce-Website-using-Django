@@ -1,1 +1,26 @@
-<h1>Home page</h1>
+{% extends "main.html" %}
+
+{% block content %}
+
+<h1>Welcome to Our Store!</h1>
+<p>Browse our wide selection of products and enjoy exclusive discounts.</p>
+
+<section>
+    <h2>Featured Products</h2>
+    <ul>
+        <li>
+            <img alt="Product 1">
+            Product 1 - $10
+        </li>
+        <li>
+            <img alt="Product 2">
+            Product 2 - $20
+        </li>
+        <li>
+            <img alt="Product 3">
+            Product 3 - $30
+        </li>
+    </ul>
+</section>
+
+{% endblock %}
