@@ -8,18 +8,20 @@
 <section>
     <h2>Featured Products</h2>
     <ul>
-        <li>
-            <img alt="Product 1">
-            Product 1 - $10
-        </li>
-        <li>
-            <img alt="Product 2">
-            Product 2 - $20
-        </li>
-        <li>
-            <img alt="Product 3">
-            Product 3 - $30
-        </li>
+        {% for product in products %}
+            <li>
+                <img src="{{product.image.url}}" alt="{{ product.name }}">
+                <h3>{{ product.name }}</h3>
+                <p>Price: ${{ product.price }}</p>
+                {% if product.digital %}
+                    <p>Type: Digital Product</p>
+                {% else %}
+                    <p>Type: Physical Product</p>
+                {% endif %}
+            </li>
+        {% empty %}
+            <p>No products available at the moment. Please check back later!</p>
+        {% endfor %}
     </ul>
 </section>
 
