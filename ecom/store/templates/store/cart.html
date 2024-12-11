@@ -1,25 +1,51 @@
-{% extends "main.html" %}
-
+{% extends 'store/main.html' %}
+{% load static %}
 {% block content %}
-<div class="cart-container">
-    <h1>Your Cart</h1>
+    <div class="cart-container">
+        <div class="cart-summary">
+            <a class="continue-shopping-btn" href="{% url 'store' %}">&#x2190; Continue Shopping</a>
+            <table class="summary-table">
+                <tr>
+                    <td><h5>Items: <strong>{{order.get_cart_items}}</strong></h5></td>
+                    <td><h5>Total: <strong>${{order.get_cart_total|floatformat:2}}</strong></h5></td>
+                    <td>
+                        <a class="checkout-btn" href="{% url 'checkout' %}">Checkout</a>
+                    </td>
+                </tr>
+            </table>
+        </div>
 
-    {% if cart_items %}
-        <ul>
-            {% for item in cart_items %}
-                <li>
-                    <div class="product-details">
-                        <span class="product-name">{{ item.product.name }}</span>
-                        <span class="quantity">{{ item.quantity }} x</span>
-                        <span class="product-price">${{ item.product.price }}</span>
+        <div class="cart-items">
+            <div class="cart-header">
+                <div class="header-item"></div>
+                <div class="header-item"><strong>Item</strong></div>
+                <div class="header-item"><strong>Price</strong></div>
+                <div class="header-item"><strong>Quantity</strong></div>
+                <div class="header-item"><strong>Total</strong></div>
+            </div>
+            {% for item in items %}
+            <div class="cart-row">
+                <div class="cart-image">
+                    <img src="{{item.product.imageURL}}">
+                </div>
+                <div class="cart-item-name">
+                    <p>{{item.product.name}}</p>
+                </div>
+                <div class="cart-item-price">
+                    <p>${{item.product.price|floatformat:2}}</p>
+                </div>
+                <div class="cart-item-quantity">
+                    <p>{{item.quantity}}</p>
+                    <div class="quantity-control">
+                        <img class="chg-quantity" src="{% static 'images/arrow-up.png' %}" alt="Increase">
+                        <img class="chg-quantity" src="{% static 'images/arrow-down.png' %}" alt="Decrease">
                     </div>
-                </li>
+                </div>
+                <div class="cart-item-total">
+                    <p>${{item.get_total|floatformat:2}}</p>
+                </div>
+            </div>
             {% endfor %}
-        </ul>
-        <p class="total">Total: ${{ total_price }}</p>
-        <a href="{% url 'checkout' %}">Proceed to Checkout</a>
-    {% else %}
-        <p>Your cart is empty.</p>
-    {% endif %}
-</div>
-{% endblock %}
+        </div>
+    </div>
+{% endblock content %}

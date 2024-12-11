@@ -1,34 +1,48 @@
+<!DOCTYPE html>
 {% load static %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
-    <title>{% block title %}E-commerce{% endblock %}</title>
-</head>
-<body>
-    <header>
-        <nav>
-            <ul>
-                <li><a href="{% url 'home' %}">Home</a></li>
-                <li><a href="{% url 'cart' %}">Cart</a></li>
-                <li><a href="{% url 'checkout' %}">Checkout</a></li>
-            </ul>
-        </nav>
-    </header>
+    <head>
+        <title>
+            Patel Store
+        </title>
 
-    <main>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1" />
+        <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+    </head>
 
-        {% block content %}
-        <!-- Page-specific content goes here -->
-        {% endblock %}
+    <body>
 
-    </main>
+        <!--Navbar-->
+        <header>
+            <nav>
+                <a href="{% url 'home' %}">Patel Store</a>
+                <div>
+                    <ul>
+                        <li>
+                            <a href="{% url 'home' %}">Home</a>
+                        </li>
+                        <li><a href="#">Login</a></li>
+                        <li><a href="{% url 'cart' %}">
+                            <img id="cart-icon" src="{% static 'images/cart.png' %}" height="10" width="10">
+                            <p id="cart-total">0</p>
+                        </a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
 
-    <footer>
-        <p>&copy; 2024 E-commerce Site</p>
-    </footer>
-</body>
+        <!--Main Content-->
+        <main>
+            {% block content %}
+            <!-- Page-specific content goes here -->
+            {% endblock %}
+        </main>
+
+        <!--Footer-->
+        <footer>
+            <p>&copy; 2024 E-commerce Site</p>
+        </footer>
+
+    </body>
+
 </html>

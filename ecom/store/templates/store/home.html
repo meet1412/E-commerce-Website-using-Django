@@ -2,27 +2,20 @@
 
 {% block content %}
 
-<h1>Welcome to Our Store!</h1>
-<p>Browse our wide selection of products and enjoy exclusive discounts.</p>
-
-<section>
-    <h2>Featured Products</h2>
-    <ul>
+{% load static %}
+    <div class="product-grid">
         {% for product in products %}
-            <li>
-                <img src="{{product.image.url}}" alt="{{ product.name }}">
-                <h3>{{ product.name }}</h3>
-                <p>Price: ${{ product.price }}</p>
-                {% if product.digital %}
-                    <p>Type: Digital Product</p>
-                {% else %}
-                    <p>Type: Physical Product</p>
-                {% endif %}
-            </li>
-        {% empty %}
-            <p>No products available at the moment. Please check back later!</p>
+        <div class="product-card">
+            <img class="product-thumbnail" src="{{product.imageURL}}" alt="{{product.name}}">
+            <div class="product-info">
+                <h6 class="product-name"><strong>{{product.name}}</strong></h6>
+                <hr class="divider">
+                <button class="add-btn">Add to Cart</button>
+                <a class="view-btn" href="#">View</a>
+                <h4 class="product-price">${{product.price}}</h4>
+            </div>
+        </div>
         {% endfor %}
-    </ul>
-</section>
+    </div>
 
 {% endblock %}
