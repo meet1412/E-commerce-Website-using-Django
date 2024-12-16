@@ -10,7 +10,7 @@
             <div class="product-info">
                 <h6 class="product-name"><strong>{{product.name}}</strong></h6>
                 <hr class="divider">
-                <button class="add-btn">Add to Cart</button>
+                <button data-product={{product.id}} data-action="add" class="add-btn update-cart">Add to Cart</button>
                 <a class="view-btn" href="#">View</a>
                 <h4 class="product-price">${{product.price}}</h4>
             </div>

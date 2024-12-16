@@ -1,50 +1,75 @@
 <!DOCTYPE html>
 {% load static %}
 
-    <head>
-        <title>
-            Patel Store
-        </title>
+<head>
+    <title>
+        Patel Store
+    </title>
 
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1" />
-        <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
-        
-    </head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+    <link rel="icon" href="data:,">
 
-    <body>
 
-        <!--Navbar-->
-        <header>
-            <nav>
-                <a href="{% url 'home' %}">Patel Store</a>
-                <div>
-                    <ul>
-                        <li>
-                            <a href="{% url 'home' %}">Home</a>
-                        </li>
-                        <li><a href="#">Login</a></li>
-                        <li><a href="{% url 'cart' %}">
+</head>
+
+<body>
+
+    <!--Navbar-->
+    <header>
+        <nav>
+            <a href="{% url 'home' %}">Patel Store</a>
+            <div>
+                <ul>
+                    <li>
+                        <a href="{% url 'home' %}">Home</a>
+                    </li>
+                    <li><a href="#">Login</a></li>
+                    <li><a href="{% url 'cart' %}">
                             <img id="cart-icon" src="{% static 'images/cart.png' %}" height="10" width="10">
-                            <p id="cart-total">0</p>
+                            <p id="cart-total">{{cartItems}}</p>
                         </a></li>
-                    </ul>
-                </div>
-            </nav>
-        </header>
+                </ul>
+            </div>
+        </nav>
+    </header>
 
-        <!--Main Content-->
-        <main>
-            {% block content %}
-            <!-- Page-specific content goes here -->
-            {% endblock %}
-        </main>
+    <!--Main Content-->
+    <main>
+        {% block content %}
+        <!-- Page-specific content goes here -->
+        {% endblock %}
+    </main>
 
-        <!--Footer-->
-        <footer>
-            <p>&copy; 2024 E-commerce Site</p>
-        </footer>
+    <!--Footer-->
+    <footer>
+        <p>&copy; 2024 E-commerce Site</p>
+    </footer>
 
-        <script type="text/javascript" src="{% static js/cart.js %}"></script>
-    </body>
+    <!-- Inject user variable -->
+    <script>
+        var user = "{{ request.user|escapejs }}";
+        function getToken(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        var csrftoken = getToken('csrftoken')
+    </script>
+
+    <!-- Include external JavaScript -->
+    <script src="{% static 'js/cart.js' %}"></script>
+
+</body>
 
 </html>
