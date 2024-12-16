@@ -6,8 +6,8 @@
             <a class="continue-shopping-btn" href="{% url 'home' %}">&#x2190; Continue Shopping</a>
             <table class="summary-table">
                 <tr>
-                    <td><h5>Items: <strong>{{order.get_cart_items}}</strong></h5></td>
-                    <td><h5>Total: <strong>${{order.get_cart_total|floatformat:2}}</strong></h5></td>
+                    <td><h5>Items: <strong>{{ order.get_cart_items }}</strong></h5></td>
+                    <td><h5>Total: <strong>${{ order.get_cart_total|floatformat:2 }}</strong></h5></td>
                     <td>
                         <a class="checkout-btn" href="{% url 'checkout' %}">Checkout</a>
                     </td>
@@ -16,36 +16,42 @@
         </div>
 
         <div class="cart-items">
-            <div class="cart-header">
-                <div class="header-item"></div>
-                <div class="header-item"><strong>Item</strong></div>
-                <div class="header-item"><strong>Price</strong></div>
-                <div class="header-item"><strong>Quantity</strong></div>
-                <div class="header-item"><strong>Total</strong></div>
-            </div>
-            {% for item in items %}
-            <div class="cart-row">
-                <div class="cart-image">
-                    <img src="{{item.product.imageURL}}">
-                </div>
-                <div class="cart-item-name">
-                    <p>{{item.product.name}}</p>
-                </div>
-                <div class="cart-item-price">
-                    <p>${{item.product.price|floatformat:2}}</p>
-                </div>
-                <div class="cart-item-quantity">
-                    <p>{{item.quantity}}</p>
-                    <div class="quantity-control">
-                        <img class="chg-quantity" src="{% static 'images/arrow-up.png' %}" alt="Increase">
-                        <img class="chg-quantity" src="{% static 'images/arrow-down.png' %}" alt="Decrease">
-                    </div>
-                </div>
-                <div class="cart-item-total">
-                    <p>${{item.get_total|floatformat:2}}</p>
-                </div>
-            </div>
-            {% endfor %}
+            <table class="cart-table">
+                <thead>
+                    <tr>
+                        <th>Image</th>
+                        <th>Item</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in items %}
+                    <tr>
+                        <td class="cart-image">
+                            <img src="{{ item.product.imageURL }}" alt="{{ item.product.name }}">
+                        </td>
+                        <td class="cart-item-name">
+                            {{ item.product.name }}
+                        </td>
+                        <td class="cart-item-price">
+                            ${{ item.product.price|floatformat:2 }}
+                        </td>
+                        <td class="cart-item-quantity">
+                            {{ item.quantity }}
+                            <div class="quantity-control">
+                                <img class="chg-quantity" src="{% static 'images/arrow-up.png' %}" alt="Increase">
+                                <img class="chg-quantity" src="{% static 'images/arrow-down.png' %}" alt="Decrease">
+                            </div>
+                        </td>
+                        <td class="cart-item-total">
+                            ${{ item.get_total|floatformat:2 }}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
 {% endblock content %}
