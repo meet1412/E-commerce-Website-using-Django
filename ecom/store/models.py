@@ -1,14 +1,13 @@
 from django.db import models
 from django.contrib.auth.models import User
-from requests import delete
 
 # Create your models here.
-class Customer (models.Model):
+class Customer(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     name = models.CharField(max_length=200, null=True)
     email = models.CharField(max_length=200, null=True)
     
-    def __str__(self): 
+    def __str__(self):
         return self.name
 
 
@@ -18,7 +17,7 @@ class Product(models.Model):
     digital = models.BooleanField(default=False, null=True, blank=False)
     image = models.ImageField(null=True, blank=True)
     
-    def __str__(self): 
+    def __str__(self):
         return self.name
 
     @property
@@ -29,7 +28,8 @@ class Product(models.Model):
             url = ''
         return url
 
-class Order(models.Model) :
+
+class Order(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, blank=True, null=True)
     date_orderd = models.DateTimeField(auto_now_add=True)
     complete = models.BooleanField(default=False, null=True, blank=False)
@@ -37,6 +37,15 @@ class Order(models.Model) :
     
     def __str__(self):
         return str(self.id)
+    
+    @property
+    def shipping(self):
+        shipping = False
+        orderitems = self.orderitem_set.all()
+        for i in orderitems:
+            if not i.product.digital:
+                shipping = True
+        return shipping
     
     @property
     def get_cart_total(self):
@@ -64,13 +73,13 @@ class OrderItem(models.Model):
 
 
 class ShippingAddress(models.Model):
-    customer = models. ForeignKey(Customer, on_delete=models.SET_NULL, blank=True, null=True)
-    order = models. ForeignKey(Order, on_delete=models.SET_NULL, blank=True, null=True)
-    address = models. CharField(max_length=200, null=True)
-    city = models. CharField(max_length=200, null=True)
-    state = models. CharField(max_length=200, null=True)
-    zipcode = models. CharField(max_length=200, null=True)
-    date_added = models. DateTimeField(auto_now_add=True)
+    customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, blank=True, null=True)
+    order = models.ForeignKey(Order, on_delete=models.SET_NULL, blank=True, null=True)
+    address = models.CharField(max_length=200, null=True)
+    city = models.CharField(max_length=200, null=True)
+    state = models.CharField(max_length=200, null=True)
+    zipcode = models.CharField(max_length=200, null=True)
+    date_added = models.DateTimeField(auto_now_add=True)
     
-    def __str__(self) :
-        return self.address    
+    def __str__(self):
+        return self.address

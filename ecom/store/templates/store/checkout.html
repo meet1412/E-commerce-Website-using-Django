@@ -1,68 +1,136 @@
 {% extends 'store/main.html' %}
 {% load static %}
 {% block content %}
-    <div class="form-row">
-        <div class="form-column">
-            <div class="form-box" id="form-wrapper">
-                <form id="form">
-                    <div id="user-info">
-                        <div class="form-field">
-                            <input required type="text" name="name" placeholder="Name...">
-                        </div>
-                        <div class="form-field">
-                            <input required type="email" name="email" placeholder="Email...">
-                        </div>
+<div class="form-row">
+    <div class="form-column">
+        <div class="form-box" id="form-wrapper">
+            <form id="form">
+                <div id="user-info">
+                    <div class="form-field">
+                        <input required type="text" name="name" placeholder="Name...">
                     </div>
-                    
-                    <div id="shipping-info">
-                        <hr>
-                        <p>Shipping Information:</p>
-                        <hr>
-                        <div class="form-field">
-                            <input type="text" name="address" placeholder="Address...">
-                        </div>
-                        <div class="form-field">
-                            <input type="text" name="city" placeholder="City...">
-                        </div>
-                        <div class="form-field">
-                            <input type="text" name="state" placeholder="State...">
-                        </div>
-                        <div class="form-field">
-                            <input type="text" name="zipcode" placeholder="Zip code...">
-                        </div>
-                        <div class="form-field">
-                            <input type="text" name="country" placeholder="Country...">
-                        </div>
+                    <div class="form-field">
+                        <input required type="email" name="email" placeholder="Email...">
                     </div>
-
+                </div>
+                
+                <div id="shipping-info">
                     <hr>
-                    <input id="form-button" class="submit-button" type="submit" value="Continue">
-                </form>
-            </div>
+                    <p>Shipping Information:</p>
+                    <hr>
+                    <div class="form-field">
+                        <input type="text" name="address" placeholder="Address...">
+                    </div>
+                    <div class="form-field">
+                        <input type="text" name="city" placeholder="City...">
+                    </div>
+                    <div class="form-field">
+                        <input type="text" name="state" placeholder="State...">
+                    </div>
+                    <div class="form-field">
+                        <input type="text" name="zipcode" placeholder="Zip code...">
+                    </div>
+                    <div class="form-field">
+                        <input type="text" name="country" placeholder="Country...">
+                    </div>
+                </div>
 
-            <br>
-            <div class="hidden" id="payment-info">
-                <small>Paypal Options</small>
-            </div>
+                <hr>
+                <input id="form-button" class="submit-button" type="submit" value="Continue">
+            </form>
         </div>
 
-        <div class="form-column">
-            <div class="summary-box">
-                <a class="back-link" href="{% url 'cart' %}">&#x2190; Back to Cart</a>
-                <hr>
-                <h3>Order Summary</h3>
-                <hr>
-                {% for item in items %}
-                <div class="cart-row">
-                    <div class="cart-image"><img src="{{item.product.imageURL}}"></div>
-                    <div class="cart-name"><p>{{item.product.name}}</p></div>
-                    <div class="cart-price"><p>${{item.product.price|floatformat:2}}</p></div>
-                    <div class="cart-quantity"><p>x{{item.quantity}}</p></div>
-                </div>
-                {% endfor %}
-                <h5>Items: {{order.get_cart_items}}</h5>
-                <h5>Total: ${{order.get_cart_total|floatformat:2}}</h5>
-            </div>
+        <br>
+        <div class="hidden" id="payment-info">
+            <small>Paypal Options</small>
+            <button id="make-payment">Make payment</button>
         </div>
     </div>
+
+    <div class="form-column">
+        <div class="summary-box">
+            <a class="back-link" href="{% url 'cart' %}">&#x2190; Back to Cart</a>
+            <hr>
+            <h3>Order Summary</h3>
+            <hr>
+            {% for item in items %}
+            <div class="cart-row">
+                <div class="cart-image"><img src="{{item.product.imageURL}}"></div>
+                <div class="cart-name"><p>{{item.product.name}}</p></div>
+                <div class="cart-price"><p>${{item.product.price|floatformat:2}}</p></div>
+                <div class="cart-quantity"><p>x{{item.quantity}}</p></div>
+            </div>
+            {% endfor %}
+            <h5>Items: {{order.get_cart_items}}</h5>
+            <h5>Total: ${{order.get_cart_total|floatformat:2}}</h5>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var user = '{{ request.user|default_if_none:"AnonymousUser" }}';
+    var shipping = '{{order.shipping}}';
+    var total = '{{order.get_cart_total}}';
+
+    if (shipping == 'False') {
+        document.getElementById('shipping-info').innerHTML = '';
+    }
+
+    if (user != 'AnonymousUser') {
+        document.getElementById('user-info').innerHTML = '';
+    }
+
+    if (shipping == 'False' && user != 'AnonymousUser') {
+        document.getElementById('form-wrapper').classList.add("hidden");
+        document.getElementById('payment-info').classList.remove("hidden");
+    }
+
+    var form = document.getElementById('form');
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        console.log('Form Submitted...');
+        document.getElementById('form-button').classList.add("hidden");
+        document.getElementById('payment-info').classList.remove("hidden");
+    });
+
+    document.getElementById('make-payment').addEventListener('click', function (e) {
+        submitFormData();
+    });
+
+    function submitFormData() {
+        console.log('Payment button clicked');
+
+        var userFormData = {
+            'name': form.name ? form.name.value : null,
+            'email': form.email ? form.email.value : null,
+            'total': total,
+        };
+
+        var shippingInfo = {
+            'address': form.address ? form.address.value : null,
+            'city': form.city ? form.city.value : null,
+            'state': form.state ? form.state.value : null,
+            'zipcode': form.zipcode ? form.zipcode.value : null,
+        };
+
+        console.log('Shipping Info:', shippingInfo);
+        console.log('User Info:', userFormData);
+
+        var url = "/process_order/";
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken,
+            },
+            body: JSON.stringify({ 'form': userFormData, 'shipping': shippingInfo }),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log('Success:', data);
+                alert('Transaction completed');
+                window.location.href = "{% url 'home' %}";
+            });
+    }
+</script>
 {% endblock content %}
