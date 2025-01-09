@@ -3,8 +3,27 @@ from .models import *
 from django.http import JsonResponse
 import json
 import datetime
+from django.shortcuts import render, redirect
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import login
+from .models import Customer
 
 # Create your views here.
+def signup(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            # Create a customer profile for the new user
+            Customer.objects.create(user=user, name=user.username, email=user.email)
+            return redirect('home')
+    else:
+        form = UserCreationForm()
+    return render(request, 'store/signup.html', {'form': form})
+
+
+
 def home(request):
     if request.user.is_authenticated:
         customer = request.user.customer
